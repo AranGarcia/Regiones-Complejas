@@ -60,27 +60,29 @@ colores = [ '#000000','#ff0000', '#ff3300', '#ff9900', '#cccc00', '#669900',
     '#0000e6', '#3333cc', '#248f24', '#6600ff', '#9900ff',
     '#990099', '#6600cc', '#660066', '#4d004d', '#33001a']
 
-"""
-#Dibuja círculo por círculo   
-for i in range(len(regiones)):
-    circulo =  plt.Circle((np.real(regiones[i]), np.imag(regiones[i])),
-        radius = radio, fc = colores[i], fill = True, linestyle = "solid")
-    ax.add_patch(circulo)
-"""
+# Calcula 20 veces la función de transición
+fz = [z]
+for i in range(20):
+    fz.append( tr.trans_reg(z) )
 
-region_original = plt.Circle((np.real(z), np.imag(z)), radio,
-    color = colores[1])
+indice = 0
 
+circulo = plt.Circle((np.real(fz[indice]), np.imag(fz[indice])), radio,
+    color = colores[indice])
 def init():
-    ax.add_patch(region_original)
-    return region_original
+    ax.add_patch(circulo)
+    return circulo
 
 def animar(i):
-    fz = tr.trans_reg(z)
-    region_original.center = (np.real(fz), np.imag(fz))
-    return region_original
+    global indice
+    if indice == 20:
+        indice = 0
+    circulo.center = (np.real(fz[indice]), np.imag(fz[indice]))
+    circulo.set_facecolor( colores[indice] )
+    indice += 1
+    return circulo
 
 anim = animation.FuncAnimation(figura, animar, init_func = init,
-    frames = 2, interval = 500)
+    interval = 500)
 
 plt.show()
