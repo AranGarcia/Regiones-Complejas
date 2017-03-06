@@ -49,7 +49,6 @@ else:
 figura = plt.figure()
 figura.canvas.set_window_title("Transformación de regiones")
 plt.ylabel('Imaginarios')
-plt.axis([-30, 30, -30, 30])
 ax = plt.gca()
 # Prepara la gráfica
 plt.grid()
@@ -62,8 +61,12 @@ colores = [ '#000000','#ff0000', '#ff3300', '#ff9900', '#cccc00', '#669900',
 
 # Calcula 20 veces la función de transición
 fz = [z]
+print('f(z) =', fz[0])
 for i in range(20):
     fz.append( tr.trans_reg(z) )
+    print('f(z) =', fz[ i + 1 ])
+
+plt.axis( get_axis(fz, radio) )
 
 indice = 0
 
