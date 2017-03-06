@@ -61,7 +61,7 @@ colores = [ '#000000','#ff0000', '#ff3300', '#ff9900', '#cccc00', '#669900',
 
 # Calcula 20 veces la función de transición
 fz = [z]
-print('f(z) =', fz[0])
+print(fz[0])
 for i in range(20):
     fz.append( tr.trans_reg(z) )
     print('f(z) =', fz[ i + 1 ])
@@ -71,16 +71,24 @@ plt.axis( get_axis(fz, radio) )
 indice = 0
 
 circulo = plt.Circle((np.real(fz[indice]), np.imag(fz[indice])), radio,
-    color = colores[indice])
+    color = colores[indice], label = str(fz[indice]))
+
+# Etiquetas
+handles, etiquetas = ax.get_legend_handles_labels()
+ax.legend(handles, etiquetas)
+
 def init():
     ax.add_patch(circulo)
     return circulo
 
 def animar(i):
     global indice
+    global etiqueta
     if indice == 20:
         indice = 0
     circulo.center = (np.real(fz[indice]), np.imag(fz[indice]))
+    L = plt.legend()
+    L.get_texts()[0].set_text(fz[indice])
     circulo.set_facecolor( colores[indice] )
     indice += 1
     return circulo
