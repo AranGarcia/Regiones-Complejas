@@ -34,6 +34,7 @@ def get_axis(coordenadas, radio_region):
 
 print("Transformación de Regiones\nf(z) = \u03B1z + \u03B2; \u03B1,\u03B2 \u03F5 \u2102\n")
 
+# Obtención de entradas desde teclado
 z = entradas.obtener_coordenada_central()
 radio = entradas.obtener_radio()
 
@@ -44,24 +45,12 @@ else:
     print("A = {x + iy | ( x - (", np.real(z),") )\u00b2 + ( y - (", np.imag(z)
         ,") )\u00b2 \u2264", radio ** 2  , '}')
 
-def radio_mayor(radios):
-    r_max = 0
-
-    for i in range( len(radios) ):
-        if radios[i] > r_max:
-            r_max = radios[i]
-    
-    return r_max
-# Fin función radio_mayor
-
 #Prepara la ventana donde se va graficar
 figura = plt.figure()
 figura.canvas.set_window_title("Transformación de regiones")
 plt.xlabel('Reales')
 plt.ylabel('Imaginarios')
 ax = plt.gca()
-# Prepara la gráfica
-plt.grid()
 
 # Colores para círculos
 colores = [ '#000000','#ff0000', '#ff3300', '#ff9900', '#cccc00', '#669900',
@@ -79,10 +68,13 @@ for i in range(20):
     radios.append(n_r)
     print('f(z) = ', fz[ i + 1 ],"radio =", radios[i])
 
-plt.axis( get_axis(fz, radio_mayor(radios)) )
+# Prepara la gráfica
+plt.grid()
+plt.axis( get_axis(fz, max(radios)) )
 
 indice = 0
 
+# Circulo de región compleja original
 circulo = plt.Circle((np.real(fz[indice]), np.imag(fz[indice])), radios[indice],
     color = colores[indice], label = str(fz[indice]))
 
@@ -91,10 +83,17 @@ handles, etiquetas = ax.get_legend_handles_labels()
 ax.legend(handles, etiquetas)
 
 def init():
+    """
+    Función inicializadora que se pasa como función objeto
+    a FuncAnimation
+    """
     ax.add_patch(circulo)
     return circulo
 
 def animar(i):
+    """
+    Función que FuncAnimation manda a llamar cada i frames.
+    """
     global indice
     global etiqueta
     if indice == 20:
@@ -110,4 +109,5 @@ def animar(i):
 anim = animation.FuncAnimation(figura, animar, init_func = init,
     interval = 500)
 
+# Muestra la gráfica
 plt.show()

@@ -14,6 +14,16 @@ def generar_complejo_aleatorio():
         (random.uniform(-20, 20) ) * 1j
 
 def dist_complejos(z1, z2):
+    """
+    dist_complejos(z1, z2) -> distancia
+
+    Función matemática para devolver la distancia entre dos números complejos
+    en el plano complejo.
+
+    Parámetros:
+    z1: Número complejo
+    z2: Número complejo
+    """
     return math.sqrt( (np.real(z1) - np.real(z2) ) ** 2 + (np.imag(z1) - np.imag(z2)) ** 2)
 
 def trans_reg(z, r):
