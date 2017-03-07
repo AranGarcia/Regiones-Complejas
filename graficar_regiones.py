@@ -19,7 +19,7 @@ def get_axis(coordenadas, radio_region):
     coor_escala = 0
     
     # Iterar a través de todos las coordenadas
-    for i in range(1, len(coordenadas)):
+    for i in range(len(coordenadas)):
         if math.fabs(np.real(coordenadas[i])) > coor_escala:
             coor_escala = np.real(coordenadas[i])
         
@@ -44,10 +44,20 @@ else:
     print("A = {x + iy | ( x - (", np.real(z),") )\u00b2 + ( y - (", np.imag(z)
         ,") )\u00b2 \u2264", radio ** 2  , '}')
 
+def radio_mayor(radios):
+    r_max = 0
+
+    for i in range( len(radios) ):
+        if radios[i] > r_max:
+            r_max = radios[i]
+    
+    return r_max
+# Fin función radio_mayor
 
 #Prepara la ventana donde se va graficar
 figura = plt.figure()
 figura.canvas.set_window_title("Transformación de regiones")
+plt.xlabel('Reales')
 plt.ylabel('Imaginarios')
 ax = plt.gca()
 # Prepara la gráfica
@@ -60,17 +70,20 @@ colores = [ '#000000','#ff0000', '#ff3300', '#ff9900', '#cccc00', '#669900',
     '#990099', '#6600cc', '#660066', '#4d004d', '#33001a']
 
 # Calcula 20 veces la función de transición
-fz = [z]
+fz = [z,]
+radios = [radio,]
 print(fz[0])
 for i in range(20):
-    fz.append( tr.trans_reg(z) )
-    print('f(z) =', fz[ i + 1 ])
+    resultado,n_r = tr.trans_reg(z,radio)
+    fz.append( resultado )
+    radios.append(n_r)
+    print('f(z) = ', fz[ i + 1 ],"radio =", radios[i])
 
-plt.axis( get_axis(fz, radio) )
+plt.axis( get_axis(fz, radio_mayor(radios)) )
 
 indice = 0
 
-circulo = plt.Circle((np.real(fz[indice]), np.imag(fz[indice])), radio,
+circulo = plt.Circle((np.real(fz[indice]), np.imag(fz[indice])), radios[indice],
     color = colores[indice], label = str(fz[indice]))
 
 # Etiquetas
@@ -87,8 +100,9 @@ def animar(i):
     if indice == 20:
         indice = 0
     circulo.center = (np.real(fz[indice]), np.imag(fz[indice]))
+    circulo.set_radius( radios[indice] )
     L = plt.legend()
-    L.get_texts()[0].set_text(fz[indice])
+    L.get_texts()[0].set_text( str(fz[indice]) + "\nradio = " + str(radios[indice]))
     circulo.set_facecolor( colores[indice] )
     indice += 1
     return circulo
